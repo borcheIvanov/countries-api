@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/067b3690-7624-4347-b2d4-097729c15d81/resourceGroups/appsvc_windows_centralus/providers/Microsoft.Web/sites/countries-api",
+    "appService.deploySubpath": "bin/Release/netcoreapp3.1/publish"
+}
