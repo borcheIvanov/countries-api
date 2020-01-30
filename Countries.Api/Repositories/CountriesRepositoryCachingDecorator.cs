@@ -20,7 +20,7 @@ namespace Countries.Api.Repositories
             _decoratedRepository = decoratedRepository;
         }
 
-        public async Task<Models.Countries> GetAllAsync()
+        public async Task<IEnumerable<Country>> GetAllAsync()
         {
             return await GetAllCountries();
         }
@@ -33,16 +33,19 @@ namespace Countries.Api.Repositories
 
         public async Task<Country> GetByCodeAsync(string code)
         {
-            var allCountries = await GetAllCountries();
-            var country = allCountries.SingleOrDefault(x =>
+            var country = (await GetAllCountries()).ToList().FirstOrDefault(x =>
                 string.Equals(x.Alpha3Code, code, StringComparison.CurrentCultureIgnoreCase));
 
-            country.BorderingCountries = allCountries.Where(x => country.Borders.Contains(x.Alpha3Code)).ToList();
+            if (country != null)
+            {
+                country.BorderingCountries = (await GetAllCountries()).ToList()
+                    .Where(x => country.Borders.Contains(x.Alpha3Code)).ToList();
+            }
             
             return country;
         }
 
-        private async Task<Models.Countries> GetAllCountries()
+        private async Task<IEnumerable<Country>> GetAllCountries()
         {
             return await _cache.GetOrAdd(CacheKey, async () => await _decoratedRepository.GetAllAsync());
         }

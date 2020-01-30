@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Countries.Api.DTModels;
@@ -27,7 +28,7 @@ namespace Countries.Api.Controllers
             {
                 Items = _mapper.Map<IEnumerable<CountryResponseModel>>(
                     await _countriesService.GetPaginated(requestModel.GetItems, requestModel.SkipItems)),
-                TotalItems = _countriesService.GetAllAsync().GetAwaiter().GetResult().Count,
+                TotalItems = _countriesService.GetAllAsync().GetAwaiter().GetResult().Count(),
                 SkippedItems = requestModel.SkipItems
             };
             

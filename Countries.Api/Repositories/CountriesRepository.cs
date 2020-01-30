@@ -10,14 +10,14 @@ namespace Countries.Api.Repositories
     {
         private const string RestCountriesUrl = "https://restcountries.eu/rest/v2"; 
         
-        public async Task<Models.Countries> GetAllAsync()
+        public async Task<IEnumerable<Country>> GetAllAsync()
         {
-            return await GetFromApi<Models.Countries>(RestCountriesUrl, "all");
+            return await GetFromApi<List<Country>>(RestCountriesUrl, "all");
         }
 
         public async Task<IEnumerable<Country>> GetPaginatedAsync(int getMany, int skipMany)
         {
-            var allCountries = await GetFromApi<Models.Countries>(RestCountriesUrl, "all");
+            var allCountries = await GetFromApi<List<Country>>(RestCountriesUrl, "all");
             return allCountries.Take(getMany + skipMany).Skip(skipMany);
         }
         

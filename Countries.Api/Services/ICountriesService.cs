@@ -6,7 +6,7 @@ namespace Countries.Api.Services
 {
     public interface ICountriesService
     {
-        Task<Models.Countries> GetAllAsync();
+        Task<IEnumerable<Country>> GetAllAsync();
         Task<IEnumerable<Country>> GetPaginated(int getMany, int skipMany);
         Task<Country> GetSingle(string code);
     }
