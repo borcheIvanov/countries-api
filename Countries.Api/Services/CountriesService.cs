@@ -13,7 +13,7 @@ namespace Countries.Api.Services
         {
              _countriesRepository = new CountriesRepositoryCachingDecorator(countriesRepository);
         }
-        public async Task<Models.Countries> GetAllAsync()
+        public async Task<IEnumerable<Country>> GetAllAsync()
         {
             return await _countriesRepository.GetAllAsync();
         }

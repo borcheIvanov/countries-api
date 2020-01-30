@@ -6,7 +6,7 @@ namespace Countries.Api.Repositories
 {
     public interface ICountriesRepository
     {
-        Task<Models.Countries> GetAllAsync();
+        Task<IEnumerable<Country>> GetAllAsync();
         Task<IEnumerable<Country>> GetPaginatedAsync(int getMany, int skipMany);
         Task<Country> GetByCodeAsync(string code);
     }
