@@ -8,11 +8,11 @@ using Xunit;
 
 namespace Countries.Api.Tests
 {
-    public class HealthcheckTests
+    public class HealthCheckTests
     {
         private readonly HttpClient _client;
 
-        public HealthcheckTests()
+        public HealthCheckTests()
         {
             var builder = new WebHostBuilder().UseStartup<Startup>();
             var testServer = new TestServer(builder);
