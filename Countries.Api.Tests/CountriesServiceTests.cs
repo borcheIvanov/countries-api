@@ -11,78 +11,66 @@ using Xunit;
 
 namespace Countries.Api.Tests
 {
-    public class CountriesServiceTests
+    public class CountriesServiceTests : BaseTestClass
     {
-        public CountriesServiceTests()
-        {
-            _repository = A.Fake<ICountriesRepository>();
-            var countries = GetDummyCountries();
-            A.CallTo(() => _repository.GetAllAsync()).Returns(countries);
-            
-            _service = new CountriesService(_repository);
-        }
-
-        private readonly ICountriesRepository _repository;
-        private readonly ICountriesService _service;
-
         [Fact]
         public async void GetAllAsync_ShouldBeNotNull()
         {
-            A.CallTo(() => _repository.GetAllAsync()).Returns(new List<Country>());
+            A.CallTo(() => Repository.GetAllAsync()).Returns(new List<Country>());
 
-            var result = await _service.GetAllAsync();
+            var result = await Service.GetAllAsync();
             result.Should().NotBeNull();
         }
 
         [Fact]
         public async void GetAllAsync_ShouldReturnAllCountries()
         {
-            var result = await _service.GetAllAsync();
+            var result = await Service.GetAllAsync();
             result.Should().HaveCount(25);
         }
 
         [Fact]
         public async void GetAllAsync_ShouldReturnListOfCountries()
         {
-            var result = await _service.GetAllAsync();
+            var result = await Service.GetAllAsync();
             result.Should().BeOfType<List<Country>>();
         }
 
         [Fact]
         public async void GetPaginated_ShouldReturnExactNumberAsTake()
         {
-            var result = await _service.GetPaginated(10, 0);
+            var result = await Service.GetPaginated(10, 0);
             result.Should().HaveCount(10);
         }
         
         [Fact]
         public async void GetPaginated_ShouldNotBeNull_IfAllAreSkipped()
         {
-            var result = await _service.GetPaginated(5, 30);
+            var result = await Service.GetPaginated(5, 30);
             result.Should().NotBeNull();
         }
         
         [Fact]
         public async void GetPaginated_ShouldReturnEmptyCollection_IfAllAreSkipped()
         {
-            var result = await _service.GetPaginated(5, 30);
+            var result = await Service.GetPaginated(5, 30);
             result.Should().BeEmpty();
         }
 
         [Fact]
         public async void GetPaginated_ShouldReturnAvailable()
         {
-            var result = await _service.GetPaginated(5, 21);
+            var result = await Service.GetPaginated(5, 21);
             result.Should().HaveCount(4);
         }
         
         [Fact]
         public void GetSingle_WithNonExistentCode_ShouldThrowException()
         {
-            A.CallTo(() => _repository.GetByCodeAsync(A<string>.Ignored))
+            A.CallTo(() => Repository.GetByCodeAsync(A<string>.Ignored))
                 .ThrowsAsync(new Exception("Country not found"));
 
-            var result = _service.GetSingle("SMKD").Exception;
+            var result = Service.GetSingle("SMKD").Exception;
             result.Should().NotBeNull();
             result.InnerException.Should().NotBeNull();
             result?.InnerException?.Message.Should().Be("Country not found");
@@ -91,7 +79,7 @@ namespace Countries.Api.Tests
         [Fact]
         public async void GetSingle_WithRightCode_ShouldReturnRightCountry()
         {
-            var result = await _service.GetSingle("MKD");
+            var result = await Service.GetSingle("MKD");
 
             result.Name.Should().Be("Macedonia");
             result.Capital.Should().Be("Skopje");
@@ -101,7 +89,7 @@ namespace Countries.Api.Tests
         [Fact]
         public async void GetSingle_ShouldReturnListOfNeighbouringCountries()
         {   
-            var result = await _service.GetSingle("MKD");
+            var result = await Service.GetSingle("MKD");
 
             result.BorderingCountries.Should().NotBeNull();
             result.BorderingCountries.Should().HaveCount(2);
@@ -113,31 +101,11 @@ namespace Countries.Api.Tests
         public async void GetSingle_CountryWithNoNeighbours_ShouldReturnEmptyListOfNeigbours()
         {
 
-            var result = await _service.GetSingle("NMKD");
+            var result = await Service.GetSingle("NMKD");
 
             result.BorderingCountries.Should().NotBeNull();
             result.BorderingCountries.Should().BeEmpty();
         }
-
-        private static IList<Country> GetDummyCountries()
-        {
-            var countries = A.CollectionOfDummy<Country>(25);
-            countries[0].Alpha3Code = "NMKD";
-            countries[0].Name = "North Macedonia";
-            countries[0].Borders = new List<string>();
-            countries[0].Capital = "North Skopje";
-
-            countries[1].Alpha3Code = "MKD";
-            countries[1].Name = "Macedonia";
-            countries[1].Capital = "Skopje";
-            countries[1].Borders = new List<string> {"SRB", "BGR"};
-            
-            countries[5].Alpha3Code = "SRB";
-            countries[5].Name = "Serbia";
-
-            countries[6].Alpha3Code = "BGR";
-            countries[6].Name = "Bulgaria";
-            return countries;
-        }
+        
     }
 }
