@@ -6,6 +6,6 @@ namespace Countries.Api.DTModels
     public class ErrorResponseModel
     {
         public int? StatusCode { get; set; }
-        public string ErrorMessage { get; set; }
+        public string ErrorMessage { get; set; } = string.Empty;
     }
 }
