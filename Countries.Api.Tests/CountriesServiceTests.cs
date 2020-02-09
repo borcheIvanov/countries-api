@@ -72,7 +72,7 @@ namespace Countries.Api.Tests
 
             var result = Service.GetSingle("SMKD").Exception;
             result.Should().NotBeNull();
-            result.InnerException.Should().NotBeNull();
+            result?.InnerException.Should().NotBeNull();
             result?.InnerException?.Message.Should().Be("Country not found");
         }
         
