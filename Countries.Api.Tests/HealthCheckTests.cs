@@ -8,21 +8,13 @@ using Xunit;
 
 namespace Countries.Api.Tests
 {
-    public class HealthcheckTests
+    public class HealthCheckTests: BaseTestClass
     {
-        private readonly HttpClient _client;
-
-        public HealthcheckTests()
-        {
-            var builder = new WebHostBuilder().UseStartup<Startup>();
-            var testServer = new TestServer(builder);
-            _client = testServer.CreateClient();
-        }
 
         [Fact]
         public async Task Health_OnInvoke_ReturnsHealthy()
         {
-            var response = await _client.GetAsync("/health");
+            var response = await base.HttpClient.GetAsync("/health");
             var responseString = await response.Content.ReadAsStringAsync();
 
             response.StatusCode.Should().Be(StatusCodes.Status200OK);

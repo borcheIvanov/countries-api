@@ -35,12 +35,12 @@ namespace Countries.Api.Repositories
         {
             var country = (await GetAllCountries()).ToList().FirstOrDefault(x =>
                 string.Equals(x.Alpha3Code, code, StringComparison.CurrentCultureIgnoreCase));
+            
+            if (country is null)
+                throw new Exception("Country not found");
 
-            if (country != null)
-            {
-                country.BorderingCountries = (await GetAllCountries()).ToList()
-                    .Where(x => country.Borders.Contains(x.Alpha3Code)).ToList();
-            }
+            country.BorderingCountries = (await GetAllCountries()).ToList()
+                .Where(x => country.Borders.Contains(x.Alpha3Code)).ToList();
             
             return country;
         }

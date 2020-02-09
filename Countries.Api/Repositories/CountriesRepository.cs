@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,7 +24,10 @@ namespace Countries.Api.Repositories
         
         public async Task<Country> GetByCodeAsync(string code)
         {
-            return await GetFromApi<Country>(RestCountriesUrl, $"alpha/{code}");
+            var country = await GetFromApi<Country>(RestCountriesUrl, $"alpha/{code}");
+            if (country is null)
+                throw new Exception("Country not found");
+            return country;
         }
         
         

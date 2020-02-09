@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Countries.Api.DTModels;
 using Countries.Api.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Countries.Api.Controllers
@@ -38,7 +40,18 @@ namespace Countries.Api.Controllers
         [HttpGet("country/{code}")]
         public async Task<IActionResult> GetCountry(string code)
         {
-            return Ok(_mapper.Map<CountryDetailsResponseModel>(await _countriesService.GetSingle(code)));
+            try
+            {
+                var result = _mapper.Map<CountryDetailsResponseModel>(await _countriesService.GetSingle(code));
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return new ObjectResult(new ErrorResponseModel{StatusCode = StatusCodes.Status500InternalServerError, ErrorMessage = e.Message})
+                {
+                    StatusCode = StatusCodes.Status500InternalServerError
+                };
+            }
         }
     }
 }
